@@ -109,3 +109,7 @@ mode using `webpack -w`.
   Defaults to `firefox-desktop`.
 
   See the documentation for the `--target` option of [`web-ext run`](https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#web-ext-run).
+  
+  ## Source
+  
+  Original source code can be found at https://github.com/hiikezoe/web-ext-webpack-plugin.
