@@ -13,10 +13,11 @@ class WebExtPlugin {
     buildPackage = false,
     chromiumBinary,
     chromiumProfile,
+    filename,
     firefox,
     firefoxProfile,
     keepProfileChanges,
-    outputFilename,
+    lint = true,
     overwriteDest = false,
     profileCreateIfMissing,
     selfHosted = false,
@@ -31,10 +32,11 @@ class WebExtPlugin {
     this.buildPackage = buildPackage;
     this.chromiumBinary = chromiumBinary;
     this.chromiumProfile = chromiumProfile;
+    this.filename = filename;
     this.firefox = firefox;
     this.firefoxProfile = firefoxProfile;
     this.keepProfileChanges = keepProfileChanges;
-    this.outputFilename = outputFilename;
+    this.lint = lint;
     this.overwriteDest = overwriteDest;
     this.profileCreateIfMissing = profileCreateIfMissing;
     this.selfHosted = selfHosted;
@@ -50,29 +52,31 @@ class WebExtPlugin {
 
     const afterEmit = async (compilation) => {
       try {
-        await webExt.cmd.lint(
-          {
-            artifactsDir: this.artifactsDir,
-            boring: false,
-            metadata: false,
-            output: 'text',
-            pretty: false,
-            selfHosted: this.selfHosted,
-            sourceDir: this.sourceDir,
-            verbose: false,
-            warningsAsErrors: true,
-          },
-          {
-            shouldExitProgram: false,
-          }
-        );
+        if (this.lint) {
+          await webExt.cmd.lint(
+            {
+              artifactsDir: this.artifactsDir,
+              boring: false,
+              metadata: false,
+              output: 'text',
+              pretty: false,
+              selfHosted: this.selfHosted,
+              sourceDir: this.sourceDir,
+              verbose: false,
+              warningsAsErrors: true,
+            },
+            {
+              shouldExitProgram: false,
+            }
+          );
+        }
 
         if (!this.watchMode) {
           if (this.buildPackage) {
             await webExt.cmd.build(
               {
                 artifactsDir: this.artifactsDir,
-                filename: this.outputFilename,
+                filename: this.filename,
                 overwriteDest: this.overwriteDest,
                 sourceDir: this.sourceDir,
               },
